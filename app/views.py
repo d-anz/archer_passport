@@ -32,7 +32,7 @@ def app_list(request):
     page = int(request.REQUEST.get('page', 1))
     data = App.objects.all().order_by('app_id')
     data, page_range = paging(page, data, 40)
-    policy_data = Policy.objects.all()
+    policy_data = Policy.objects.filter(policy_default=2)
     return render_to_response('app/list.html', {'data': data, 'policy_data': policy_data, 'page_range': page_range},
                               context_instance=RequestContext(request))
 

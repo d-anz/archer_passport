@@ -15,7 +15,7 @@ class Policy(models.Model):
     policy_id = models.AutoField(primary_key=True)
     policy_name = models.CharField(max_length=50)
     policy_active = models.IntegerField(default=1, choices=choice_active)
-    policy_default = models.IntegerField(default=0, choices=choice_default)
+    policy_default = models.IntegerField(default=2, choices=choice_default)
     policy_desc = models.CharField(max_length=255, blank=True, null=True, default='')
 
     def __str__(self):

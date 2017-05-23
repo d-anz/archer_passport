@@ -66,15 +66,10 @@
                 创建
             </a>
         </div>
-        {#        <div class="">#}
-        {#                <a class="btn btn-success " href="{% url 'app:app_add' %}">创建</a>#}
-        {#            </div>#}
-        {#        </div>#}
-        <!-- /.span -->
     </div>
 
 
-    <!-- 添加策略 -->
+    <!-- 添加应用 -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel">
         <div class="modal-dialog" role="document">
@@ -124,6 +119,7 @@
                             <label for="recipient-name"
                                    class="control-label">安全策略:</label>
                             <select class="form-control" id="app_policy" name="app_policy">
+                                <option value="0">无子站化策略</option>
                                 {% for d in policy_data %}
                                     <option value="{{ d.policy_id }}">{{ d.policy_name }}</option>
                                 {% endfor %}
@@ -200,6 +196,7 @@
                                 {% for d in policy_data %}
                                     <option value="{{ d.policy_id }}">{{ d.policy_name }}</option>
                                 {% endfor %}
+                                <option value="0">无子站化策略</option>
                             </select>
                         </div>
                     </form>

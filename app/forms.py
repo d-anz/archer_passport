@@ -11,6 +11,7 @@ class AppAddForm(forms.ModelForm):
     app_key = forms.CharField(required=False)
     app_manager = forms.CharField(required=True)
     app_callback = forms.CharField(required=True)
+    app_policy = forms.CharField(required=False)
 
     class Meta:
         model = App
@@ -26,6 +27,7 @@ class AppAddForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(AppAddForm, self).clean()
         app_id = forms.IntegerField(required=True)
+        app_policy = forms.CharField(required=False)
         app_name = cleaned_data.get('app_name')
         app_domain = cleaned_data.get('app_domain')
         app_manager = cleaned_data.get('app_manager')
@@ -34,13 +36,13 @@ class AppAddForm(forms.ModelForm):
         if not app_name:
             self._errors['app_name'] = self.error_class([u"请输入应用名称"])
         if not app_domain:
-            self._errors['app_domain'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_domain'] = self.error_class([u"请输入应用域名"])
         if not app_manager:
-            self._errors['app_manager'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_manager'] = self.error_class([u"请输入应用管理员名称"])
         if not app_callback:
-            self._errors['app_callback'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_callback'] = self.error_class([u"请输入应用退出回调地址"])
         if not app_id:
-            self._errors['app_id'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_id'] = self.error_class([u"请输入应用ID"])
         return cleaned_data
 
 
@@ -103,9 +105,9 @@ class AppForm(forms.ModelForm):
         if not app_name:
             self._errors['app_name'] = self.error_class([u"请输入应用名称"])
         if not app_domain:
-            self._errors['app_domain'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_domain'] = self.error_class([u"请输入应用域名"])
         if not app_manager:
-            self._errors['app_manager'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_manager'] = self.error_class([u"请输入应用管理员名称"])
         if not app_callback:
-            self._errors['app_callback'] = self.error_class([u"请输入应用名称"])
+            self._errors['app_callback'] = self.error_class([u"请输入应用退出回调地址"])
         return cleaned_data

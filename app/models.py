@@ -10,7 +10,7 @@ class App(models.Model):
     app_domain = models.CharField(max_length=50)
     app_manager = models.CharField(max_length=20)
     app_callback = models.CharField(max_length=255)
-    app_policy = models.IntegerField(default=2)
+    app_policy = models.IntegerField(default=0)
 
     def __str__(self):
         return self.app_id

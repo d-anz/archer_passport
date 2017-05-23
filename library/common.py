@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+from django.db.models import Q
+
 from policy.models import PolicyRule, Policy
 from app.models import App
+
 import re
-from django.contrib import messages
 import json
 
 
@@ -26,31 +29,35 @@ def check_policy(app_id, username='', ip=''):
     # common policy
     pr = ''
     try:
-        pr = PolicyRule.objects.filter(rule_policy=Policy.objects.get(policy_default=1).policy_id)
+        if Policy.objects.filter(policy_default=1).filter(policy_active=1):
+            pr = PolicyRule.objects.filter(rule_policy=Policy.objects.get(policy_default=1).policy_id)
     except Exception, e:
         msg['errmsg'] = e.message
     for p in pr:
-        if ip and ((p.rule_type == 'ip' and p.rule_value == ip) or p.rule_value == '*'):
+        if ip and (p.rule_type == 'ip' and (p.rule_value == ip or p.rule_value == '*')):
             msg['type'] = 'ip'
             if p.rule_action == 'allow':
                 msg['action'] = 'Allow'
                 return True, msg
             else:
                 msg['action'] = 'Deny'
-                msg['errmsg'] = ' unauthorized ip！'
+                msg['errmsg'] = ' unauthorized ip'
                 return False, msg
-        if username and ((p.rule_type == 'username' and p.rule_value == username) or p.rule_value == '*'):
+        if username and (p.rule_type == 'username' and (p.rule_value == username or p.rule_value == '*')):
             msg['type'] = 'username'
             if p.rule_action == 'allow':
                 msg['action'] = 'Allow'
                 return True, msg
             else:
                 msg['action'] = 'Deny'
-                msg['errmsg'] = ' unauthorized user！'
+                msg['errmsg'] = ' unauthorized user'
             return False, msg
     # service policy
+    pr = ''
     try:
-        pr = PolicyRule.objects.filter(rule_policy=App.objects.get(pk=app_id).app_policy)
+        rule_policy=App.objects.get(pk=app_id).app_policy
+        if Policy.objects.filter(pk=rule_policy).filter(policy_active=1):
+            pr = PolicyRule.objects.filter(rule_policy=rule_policy)
     except Exception, e:
         msg['errmsg'] = e.message
     # filter
