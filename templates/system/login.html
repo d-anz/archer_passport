@@ -58,8 +58,9 @@
         </form>
     </div>
 </div>
+
 <script src="{% static "js/jquery.min.js" %}"></script>
-<script src="{% static "js/bootstrap.min.js;" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
 <!-- 弹出提示框 -->
 <script src="{% static "js/plugins/toastr/toastr.min.js" %}"></script>
 
@@ -82,7 +83,7 @@
     };
     {% if messages %}
         {% for message in messages %}
-            toastr.{{ message.tags }};("{{ message }}");
+            toastr.{{ message.tags }}("{{ message }}");
         {% endfor %}
     {% endif %}
 </script>

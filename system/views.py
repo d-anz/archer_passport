@@ -44,17 +44,24 @@ def user_login(request):
             cd = form.cleaned_data
             # 验证账号密码
             user = authenticate(username=cd['username'], password=cd['password'])
+
             if user:
                 # 验证OTP
                 try:
                     key = user.profile.otp
-                    if settings.ARCHER_ENABLE_OTP and cd['otp'] and len(cd['otp']) == 6:
-                        if not pyotp.TOTP(key).verify(cd['code']):
-                            msg = '错误：动态口令验证失败！'
+                    if settings.ARCHER_ENABLE_OTP:
+                        if cd['otp'] and len(str(cd['otp'])) == 6:
+                            if not pyotp.TOTP(key).verify(cd['otp']):
+                                msg = '错误：动态口令验证失败!'
+                            else:
+                                login(request, user)
+                                rs, msg = True, '登录成功！'
+                        else:
+                            msg = '错误：请正确输入动态口令'
                     else:
                         login(request, user)
-                        rs = True, '登录成功！'
-                except Exception, e:
+                        rs, msg = True, '登录成功！'
+                except UserProfile.DoesNotExist, e:
                     UserProfile(user=user, otp=pyotp.random_base32(), avatar='').save()  # 追加otp
                     msg = e.message
             if rs:
